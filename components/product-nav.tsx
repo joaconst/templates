@@ -15,27 +15,27 @@ import React from "react"
 const components: { title: string; href: string; description: string }[] = [
   {
     title: "iPhone",
-    href: "/products?category=iPhone",
+    href: "/products?categories=1",
     description: "Experimente los últimos modelos de iPhone con potentes funciones.",
   },
   {
     title: "iPad",
-    href: "/products?category=iPad",
+    href: "/products?categories=4",
     description: "Tabletas versátiles para la creatividad y la productividad.",
   },
   {
     title: "Mac",
-    href: "/products?category=Mac",
+    href: "/products?categories=2",
     description: "Potentes ordenadores para uso profesional y personal.",
   },
   {
     title: "Watch",
-    href: "/products?category=Watch",
+    href: "/products?categories=3",
     description: "Monitoreo avanzado de salud y seguimiento de estado físico.",
   },
   {
     title: "AirPods",
-    href: "/products?category=AirPods",
+    href: "/products?categories=5",
     description: "Audio inalámbrico con una calidad de sonido increíble.",
   },
 ]
@@ -47,7 +47,7 @@ export function ProductNav() {
         <NavigationMenuItem>
           <NavigationMenuTrigger>Productos</NavigationMenuTrigger>
           <NavigationMenuContent>
-            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
+            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] dark:bg-white bg-background dark:text-black text-white">
               {components.map((component) => (
                 <ListItem key={component.title} title={component.title} href={component.href}>
                   {component.description}
@@ -76,7 +76,7 @@ const ListItem = React.forwardRef<React.ElementRef<"a">, React.ComponentPropsWit
           <a
             ref={ref}
             className={cn(
-              "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent focus:bg-accent focus:text-accent-foreground",
+              "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors dark:hover:bg-accent hover:bg-accent/50 focus:bg-accent focus:text-accent-foreground",
               className,
             )}
             {...props}

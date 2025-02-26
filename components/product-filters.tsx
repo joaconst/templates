@@ -25,17 +25,20 @@ export function ProductFilters({
     conditions: false,
   });
 
-  // Alternar la visibilidad de una sección
-  const toggleSection = (section: string) => {
-    setOpenSections((prev) => ({
-      ...prev,
-      [section]: !prev[section],
-    }));
+  // Funciones para abrir y cerrar secciones
+  const openSection = (section: string) => {
+    setOpenSections((prev) => ({ ...prev, [section]: true }));
+  };
+
+  const closeSection = (section: string) => {
+    setOpenSections((prev) => ({ ...prev, [section]: false }));
   };
 
   useEffect(() => {
-    const categoriesFromUrl = searchParams.get("categories")?.split(",").map(Number) || [];
-    const conditionsFromUrl = searchParams.get("conditions")?.split(",").map(Number) || [];
+    const categoriesFromUrl =
+      searchParams.get("categories")?.split(",").map(Number) || [];
+    const conditionsFromUrl =
+      searchParams.get("conditions")?.split(",").map(Number) || [];
     const sortFromUrl = searchParams.get("sort");
 
     setSelectedCategories(categoriesFromUrl);
@@ -94,7 +97,11 @@ export function ProductFilters({
         <AccordionSection
           title="Ordenar por"
           isOpen={openSections.sort}
-          onToggle={() => toggleSection("sort")}
+          onOpen={() => openSection("sort")}
+          onClose={() => closeSection("sort")}
+          onClick={() =>
+            setOpenSections((prev) => ({ ...prev, sort: !prev.sort }))
+          }
         >
           <div className="space-y-1">
             <button
@@ -122,7 +129,11 @@ export function ProductFilters({
         <AccordionSection
           title="Categorías"
           isOpen={openSections.categories}
-          onToggle={() => toggleSection("categories")}
+          onOpen={() => openSection("categories")}
+          onClose={() => closeSection("categories")}
+          onClick={() =>
+            setOpenSections((prev) => ({ ...prev, categories: !prev.categories }))
+          }
         >
           <FilterSection
             items={categories}
@@ -135,7 +146,11 @@ export function ProductFilters({
         <AccordionSection
           title="Condición"
           isOpen={openSections.conditions}
-          onToggle={() => toggleSection("conditions")}
+          onOpen={() => openSection("conditions")}
+          onClose={() => closeSection("conditions")}
+          onClick={() =>
+            setOpenSections((prev) => ({ ...prev, conditions: !prev.conditions }))
+          }
         >
           <FilterSection
             items={conditions}
@@ -174,30 +189,43 @@ const FilterSection = ({
   </div>
 );
 
-// Componente de acordeón para las secciones
+// Componente de acordeón para las secciones con animación
+type AccordionSectionProps = {
+  title: string;
+  isOpen: boolean;
+  onOpen: () => void;
+  onClose: () => void;
+  onClick: () => void;
+  children: React.ReactNode;
+};
+
 const AccordionSection = ({
   title,
   isOpen,
-  onToggle,
+  onOpen,
+  onClose,
+  onClick,
   children,
-}: {
-  title: string;
-  isOpen: boolean;
-  onToggle: () => void;
-  children: React.ReactNode;
-}) => (
-  <div className="mb-4 last:mb-0">
+}: AccordionSectionProps) => (
+  <div onMouseLeave={onClose} className="mb-4 last:mb-0">
     <button
-      onClick={onToggle}
-      className="w-full flex justify-between items-center p-2 rounded-lg dark:hover:bg-accent hover:bg-accent/50 transition-colors"
+      onClick={onClick}
+      onMouseEnter={onOpen} 
+      className="w-full flex justify-between items-center p-2 rounded-lg hover:bg-accent/50 dark:hover:bg-accent transition-colors"
     >
-      <h3 className="text-lg font-semibold dark:text-dark">
-        {title}
-      </h3>
-      {isOpen ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+      <h3 className="text-lg font-semibold dark:text-dark">{title}</h3>
+      <span className={`transition-transform duration-500 ${isOpen ? "rotate-180" : "rotate-0"}`}>
+        <ChevronDown size={18} />
+      </span>
     </button>
-    <div className={`${isOpen ? "block" : "hidden"} mt-2`}>
-      {children}
+    {/* Contenedor animado */}
+    <div className="overflow-hidden transition-all duration-300 ease-in-out">
+      <div
+        className={`mt-2 transition-all duration-300 ease-in-out ${isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+          }`}
+      >
+        {children}
+      </div>
     </div>
   </div>
 );

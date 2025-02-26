@@ -18,9 +18,7 @@ export type Product = {
     cuotas_12: number
   }
   info?: string
-  // Para imágenes (implementación futura)
-  // image_url?: string   // Opción desde URL externa
-  // image_path?: string  // Opción desde /public/images
+  imagen_url?: string   // Opción desde URL externa
 }
 
 export type ProductFilterParams = {

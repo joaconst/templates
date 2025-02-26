@@ -1,89 +1,89 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import Image from "next/image"
-import { Badge } from "@/components/ui/badge"
-import type { Product } from "@/lib/types"
-import { ProductDetails } from "./product-detail"
-import { ClearFiltersButton } from "./clear-filters-button"
-import { useState, useEffect } from "react"
+import { motion } from "framer-motion";
+import Image from "next/image";
+import { Badge } from "@/components/ui/badge";
+import type { Product } from "@/lib/types";
+import { ProductDetails } from "./product-detail";
+import { ClearFiltersButton } from "./clear-filters-button";
+import { useState, useEffect } from "react";
 
 export function ProductGrid({
   products,
   searchParams,
   categories = [],
-  conditions = []
+  conditions = [],
 }: {
-  products: Product[]
+  products: Product[];
   searchParams: {
-    search?: string | string[]
-    categories?: string | string[]
-    conditions?: string | string[]
-  }
-  categories?: Array<{ id: number; name: string }>
-  conditions?: Array<{ id: number; name: string }>
+    search?: string | string[];
+    categories?: string | string[];
+    conditions?: string | string[];
+  };
+  categories?: Array<{ id: number; name: string }>;
+  conditions?: Array<{ id: number; name: string }>;
 }) {
-  const [isScrolled, setIsScrolled] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false);
 
   // Detectar el desplazamiento
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 300) {
-        setIsScrolled(true)
+        setIsScrolled(true);
       } else {
-        setIsScrolled(false)
+        setIsScrolled(false);
       }
-    }
-    window.addEventListener("scroll", handleScroll)
+    };
+    window.addEventListener("scroll", handleScroll);
     return () => {
-      window.removeEventListener("scroll", handleScroll)
-    }
-  }, [])
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   const search = Array.isArray(searchParams.search)
     ? searchParams.search[0] || ""
-    : searchParams.search || ""
+    : searchParams.search || "";
 
   const selectedCategories = Array.isArray(searchParams.categories)
     ? searchParams.categories.map(Number)
-    : searchParams.categories?.split(',').map(Number) || []
+    : searchParams.categories?.split(",").map(Number) || [];
 
   const selectedConditions = Array.isArray(searchParams.conditions)
     ? searchParams.conditions.map(Number)
-    : searchParams.conditions?.split(',').map(Number) || []
+    : searchParams.conditions?.split(",").map(Number) || [];
 
-  const filteredProducts = products.filter(product => {
-    const searchLower = search.toLowerCase()
+  const filteredProducts = products.filter((product) => {
+    const searchLower = search.toLowerCase();
     const matchesSearch =
       product.modelo.toLowerCase().includes(searchLower) ||
-      (product.info?.toLowerCase().includes(searchLower) ?? false)
+      (product.info?.toLowerCase().includes(searchLower) ?? false);
 
     const matchesCategory = selectedCategories.length === 0 ||
-      selectedCategories.includes(product.categoria_id)
+      selectedCategories.includes(product.categoria_id);
 
     const matchesCondition = selectedConditions.length === 0 ||
-      (product.condicion_id ? selectedConditions.includes(product.condicion_id) : true)
+      (product.condicion_id ? selectedConditions.includes(product.condicion_id) : true);
 
-    return matchesSearch && matchesCategory && matchesCondition
-  })
+    return matchesSearch && matchesCategory && matchesCondition;
+  });
 
   const activeCategories = selectedCategories
-    .map(id => categories.find(c => c.id === id)?.name)
-    .filter((name): name is string => !!name)
+    .map((id) => categories.find((c) => c.id === id)?.name)
+    .filter((name): name is string => !!name);
 
   const activeConditions = selectedConditions
-    .map(id => conditions.find(c => c.id === id)?.name)
-    .filter((name): name is string => !!name)
+    .map((id) => conditions.find((c) => c.id === id)?.name)
+    .filter((name): name is string => !!name);
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" })
-  }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <div>
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
-          <h2 className="text-2xl font-bold">Productos</h2>
+          <h2 className="text-2xl font-bold text-primary">Productos</h2>
           <p className="text-muted-foreground">{filteredProducts.length} resultados encontrados</p>
         </div>
 
@@ -131,33 +131,17 @@ export function ProductGrid({
             >
               <div className="aspect-square overflow-hidden rounded-lg bg-muted">
                 <Image
-                  src="/placeholder.svg"
+                  src={product.imagen_url || "/placeholder.svg"}
                   alt={product.modelo}
                   width={400}
                   height={400}
                   className="object-cover w-full h-full transition-transform group-hover:scale-105"
+                  priority={index < 4} // Prioriza las primeras 4 imágenes (above the fold)
+                  loading={index >= 4 ? "lazy" : "eager"} // Lazy loading para imágenes below the fold
+                  onError={(e) => {
+                    e.currentTarget.src = "/placeholder.svg"; // Mostrar placeholder si hay un error
+                  }}
                 />
-                {/* OPCIÓN 1: Imágenes desde la base de datos */}
-                {/* {product.image_url && (
-                  <Image
-                    src={product.image_url}
-                    alt={product.modelo}
-                    width={400}
-                    height={400}
-                    className="object-cover w-full h-full transition-transform group-hover:scale-105"
-                    // Si usas dominios externos, agregar a next.config.js
-                    // Ej: domains: ['tudominio.com']
-                  />
-                )} */}
-
-                {/* OPCIÓN 2: Imágenes locales en public/images */}
-                {/* <Image
-                  src={`/images/${product.modelo.toLowerCase().replace(/ /g, '-')}.jpg`}
-                  alt={product.modelo}
-                  width={400}
-                  height={400}
-                  className="object-cover w-full h-full transition-transform group-hover:scale-105"
-                /> */}
               </div>
 
               <div className="mt-4 space-y-2">
@@ -174,7 +158,7 @@ export function ProductGrid({
                       variant={product.condicion_id === 1 ? "default" : "secondary"}
                       className="ml-2"
                     >
-                      {product.condicion_id === 1 ? 'Nuevo' : 'Usado'}
+                      {product.condicion_id === 1 ? "Nuevo" : "Usado"}
                     </Badge>
                   )}
                 </div>
@@ -182,24 +166,24 @@ export function ProductGrid({
                 <div className="flex justify-between items-center">
                   <div>
                     <p className="text-lg font-bold">
-                      USD ${product.precio_usd.toLocaleString('es-AR')}
+                      USD ${product.precio_usd.toLocaleString("es-AR")}
                     </p>
                     {product.precio_ars && (
                       <p className="text-sm text-muted-foreground">
-                        ARS ${product.precio_ars.toLocaleString('es-AR')}
+                        ARS ${product.precio_ars.toLocaleString("es-AR")}
                       </p>
                     )}
                   </div>
                   <ProductDetails product={product} />
                 </div>
 
-                {product.type === 'used' && product.cuotas && (
+                {product.type === "used" && product.cuotas && (
                   <div className="mt-2 p-3 bg-muted text-muted-foreground rounded-lg">
                     <p className="text-sm font-medium text-muted-foreground">Cuotas sin interés:</p>
                     <div className="grid grid-cols-2 gap-2 mt-1">
                       {Object.entries(product.cuotas).map(([key, value]) => (
                         <div key={key} className="text-sm">
-                          {key.replace('cuotas_', '')}x: ${value.toLocaleString('es-AR')}
+                          {key.replace("cuotas_", "")}x: ${value.toLocaleString("es-AR")}
                         </div>
                       ))}
                     </div>
@@ -221,5 +205,5 @@ export function ProductGrid({
         </button>
       )}
     </div>
-  )
+  );
 }

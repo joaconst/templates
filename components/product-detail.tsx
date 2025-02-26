@@ -1,14 +1,13 @@
-"use client"
-
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Product } from "@/lib/types"
-import { motion } from "framer-motion"
-import { useState } from "react"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Product } from "@/lib/types";
+import { motion } from "framer-motion";
+import { useState } from "react";
+import Image from "next/image";
 
 export function ProductDetails({ product }: { product: Product }) {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
@@ -21,25 +20,30 @@ export function ProductDetails({ product }: { product: Product }) {
       </Button>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="max-h-[90vh] sm:max-w-3xl">  
+        <DialogContent className="max-h-[95dvh] overflow-y-auto sm:max-w-3xl">  
           <DialogHeader>
-            <DialogTitle>{product.modelo}</DialogTitle>
+            <DialogTitle className="text-lg sm:text-xl">{product.modelo}</DialogTitle>
           </DialogHeader>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            {/* Sección de imagen */}
-            <div className="aspect-square overflow-hidden rounded-lg bg-muted">
-              <motion.img
-                src="/placeholder.svg"
+            {/* Sección de imagen con altura fija en móvil */}
+            <div className="aspect-square sm:aspect-auto sm:h-full max-h-[400px]">
+              <Image
+                src={product.imagen_url || "/placeholder.svg"}
                 alt={product.modelo}
-                className="h-full w-full object-cover"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
+                width={600}
+                height={600}
+                className="h-full w-full object-cover rounded-lg"
+                priority
+                onError={(e) => {
+                  console.error("Error cargando imagen:", product.imagen_url);
+                  e.currentTarget.src = "/placeholder.svg";
+                }}
               />
             </div>
 
-            {/* Detalles técnicos */}
-            <div className="space-y-4">
+            {/* Contenedor de detalles con scroll en móvil */}
+            <div className="space-y-4 overflow-y-auto max-h-[60vh] sm:max-h-none pb-4">
               <div className="flex flex-wrap gap-2">
                 <Badge variant="outline" className="text-sm">
                   Categoría: {product.category_name}
@@ -51,7 +55,7 @@ export function ProductDetails({ product }: { product: Product }) {
                 )}
               </div>
 
-              <div className="flex justify-between items-center gap-4">
+              <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
                 <PriceDisplay 
                   usd={product.precio_usd} 
                   ars={product.precio_ars} 
@@ -59,39 +63,25 @@ export function ProductDetails({ product }: { product: Product }) {
                 <Button 
                   variant="default" 
                   size="sm"
-                  className="flex-shrink-0"
-                  onClick={() => console.log('Añadir al carrito', product.id)} // Aquí tu lógica
+                  className="w-full sm:w-auto"
                 >
                   Añadir al carrito
                 </Button>
               </div>
 
-              <div className="space-y-2">
-                {product.capacidad && (
-                  <DetailItem label="Capacidad" value={product.capacidad} />
-                )}
-
-                {product.bateria && (
-                  <DetailItem label="Batería" value={`${product.bateria}%`} />
-                )}
-
-                {product.codigo && (
-                  <DetailItem label="Código" value={product.codigo} />
-                )}
-
-                {product.color && (
-                  <DetailItem label="Color" value={product.color} />
-                )}
+              <div className="space-y-3">
+                {product.capacidad && <DetailItem label="Capacidad" value={product.capacidad} />}
+                {product.bateria && <DetailItem label="Batería" value={`${product.bateria}%`} />}
+                {product.codigo && <DetailItem label="Código" value={product.codigo} />}
+                {product.color && <DetailItem label="Color" value={product.color} />}
               </div>
 
-              {product.cuotas && (
-                <Installments cuotas={product.cuotas} />
-              )}
+              {product.cuotas && <Installments cuotas={product.cuotas} />}
 
               {product.info && (
                 <div className="pt-4 border-t">
                   <h3 className="text-sm font-medium mb-2">Información adicional</h3>
-                  <p className="text-sm text-muted-foreground whitespace-pre-line">
+                  <p className="text-sm text-muted-foreground whitespace-pre-line leading-relaxed">
                     {product.info}
                   </p>
                 </div>
@@ -101,7 +91,7 @@ export function ProductDetails({ product }: { product: Product }) {
         </DialogContent>
       </Dialog>
     </>
-  )
+  );
 }
 
 // Componentes auxiliares (mantenemos los mismos con mejoras de estilo)
@@ -116,17 +106,17 @@ const PriceDisplay = ({ usd, ars }: { usd: number; ars?: number }) => (
       )}
     </div>
   </div>
-)
+);
 
 const DetailItem = ({ label, value }: { label: string; value: string }) => (
   <div className="flex justify-between items-center text-sm">
     <span className="text-muted-foreground">{label}:</span>
     <span className="font-medium">{value}</span>
   </div>
-)
+);
 
 const Installments = ({ cuotas }: { cuotas?: Product['cuotas'] }) => {
-  if (!cuotas) return null
+  if (!cuotas) return null;
     
   return (
     <div className="bg-muted p-4 rounded-lg">
@@ -144,5 +134,5 @@ const Installments = ({ cuotas }: { cuotas?: Product['cuotas'] }) => {
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
