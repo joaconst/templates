@@ -77,7 +77,7 @@ export function SearchCommand() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="w-full max-w-sm flex items-center gap-2 px-3 py-1.5 text-sm text-muted-foreground rounded-md border bg-background shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground"
+        className="w-full max-w-sm flex items-center gap-2 px-3 py-1.5 text-sm text-muted-foreground rounded-md border bg-background shadow-sm transition-colors dark:hover:bg-accent hover:bg-accent/50 hover:text-accent-foreground"
       >
         <Search className="h-4 w-4" />
         <span className="flex-1 text-left">Buscar productos...</span>

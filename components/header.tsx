@@ -7,7 +7,7 @@ import Link from "next/link"
 import { SearchCommand } from "@/components/search-command"
 import { ProductNav } from "@/components/product-nav"
 import { MobileNav } from "@/components/mobile-nav"
-import { Suspense, useState } from "react"
+import { useState } from "react"
 
 export function Header() {
   // Estado para controlar la visibilidad del campo de búsqueda en móviles
@@ -21,7 +21,7 @@ export function Header() {
       <div className="container flex h-16 items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <MobileNav />
-          <Link href="/" className="text-2xl font-bold tracking-tighter">
+          <Link href="/" className="text-2xl font-bold tracking-tighter text-primary">
             GreenPlace
           </Link>
           <div className="hidden md:flex">

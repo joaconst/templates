@@ -21,7 +21,7 @@ export function ProductDetails({ product }: { product: Product }) {
       </Button>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">  
+        <DialogContent className="max-h-[90vh] sm:max-w-3xl">  
           <DialogHeader>
             <DialogTitle>{product.modelo}</DialogTitle>
           </DialogHeader>
@@ -130,7 +130,7 @@ const Installments = ({ cuotas }: { cuotas?: Product['cuotas'] }) => {
     
   return (
     <div className="bg-muted p-4 rounded-lg">
-      <h3 className="text-sm font-medium mb-2">Plan de cuotas</h3>
+      <h3 className="text-md font-medium mb-2">Plan en cuotas</h3>
       <div className="grid grid-cols-2 gap-2">
         {Object.entries(cuotas).map(([key, value]) => (
           <div key={key} className="text-sm">

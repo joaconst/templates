@@ -2,11 +2,11 @@
 
 import { motion } from "framer-motion"
 import Image from "next/image"
-import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import type { Product } from "@/lib/types"
 import { ProductDetails } from "./product-detail"
 import { ClearFiltersButton } from "./clear-filters-button"
+import { useState, useEffect } from "react"
 
 export function ProductGrid({
   products,
@@ -23,6 +23,23 @@ export function ProductGrid({
   categories?: Array<{ id: number; name: string }>
   conditions?: Array<{ id: number; name: string }>
 }) {
+  const [isScrolled, setIsScrolled] = useState(false)
+
+  // Detectar el desplazamiento
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 300) {
+        setIsScrolled(true)
+      } else {
+        setIsScrolled(false)
+      }
+    }
+    window.addEventListener("scroll", handleScroll)
+    return () => {
+      window.removeEventListener("scroll", handleScroll)
+    }
+  }, [])
+
   const search = Array.isArray(searchParams.search)
     ? searchParams.search[0] || ""
     : searchParams.search || ""
@@ -58,47 +75,51 @@ export function ProductGrid({
     .map(id => conditions.find(c => c.id === id)?.name)
     .filter((name): name is string => !!name)
 
-    return (
-      <div>
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-          <div>
-            <h2 className="text-2xl font-bold">Productos</h2>
-            <p className="text-muted-foreground">{filteredProducts.length} resultados encontrados</p>
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" })
+  }
+
+  return (
+    <div>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+        <div>
+          <h2 className="text-2xl font-bold">Productos</h2>
+          <p className="text-muted-foreground">{filteredProducts.length} resultados encontrados</p>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+          <div className="flex flex-wrap gap-2 flex-1">
+            {activeCategories.map((category) => (
+              <Badge key={category} variant="secondary">
+                {category}
+              </Badge>
+            ))}
+            {activeConditions.map((condition) => (
+              <Badge key={condition} variant="secondary">
+                {condition}
+              </Badge>
+            ))}
+            {search && <Badge variant="secondary">Buscar: {search}</Badge>}
           </div>
-          
-          <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
-            <div className="flex flex-wrap gap-2 flex-1">
-              {activeCategories.map((category) => (
-                <Badge key={category} variant="secondary">
-                  {category}
-                </Badge>
-              ))}
-              {activeConditions.map((condition) => (
-                <Badge key={condition} variant="secondary">
-                  {condition}
-                </Badge>
-              ))}
-              {search && <Badge variant="secondary">Buscar: {search}</Badge>}
-            </div>
-            
-            {/* Botón para móvil */}
-            <div className="sm:hidden w-full">
-              <ClearFiltersButton searchParams={searchParams} />
-            </div>
-          </div>
-  
-          {/* Botón para desktop */}
-          <div className="hidden sm:block">
+
+          {/* Botón para móvil */}
+          <div className="sm:hidden w-full">
             <ClearFiltersButton searchParams={searchParams} />
           </div>
         </div>
-  
-        {filteredProducts.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-lg text-muted-foreground">No se encontraron productos.</p>
-            <ClearFiltersButton searchParams={searchParams} />
-          </div>
-        ) : (
+
+        {/* Botón para desktop */}
+        <div className="hidden sm:block">
+          <ClearFiltersButton searchParams={searchParams} />
+        </div>
+      </div>
+
+      {filteredProducts.length === 0 ? (
+        <div className="text-center py-12">
+          <p className="text-lg text-muted-foreground">No se encontraron productos.</p>
+          <ClearFiltersButton searchParams={searchParams} />
+        </div>
+      ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProducts.map((product, index) => (
             <motion.div
@@ -137,8 +158,6 @@ export function ProductGrid({
                   height={400}
                   className="object-cover w-full h-full transition-transform group-hover:scale-105"
                 /> */}
-
-                {/* Placeholder temporal */}
               </div>
 
               <div className="mt-4 space-y-2">
@@ -175,7 +194,7 @@ export function ProductGrid({
                 </div>
 
                 {product.type === 'used' && product.cuotas && (
-                  <div className="mt-2 p-3 bg-muted rounded-lg">
+                  <div className="mt-2 p-3 bg-muted text-muted-foreground rounded-lg">
                     <p className="text-sm font-medium text-muted-foreground">Cuotas sin interés:</p>
                     <div className="grid grid-cols-2 gap-2 mt-1">
                       {Object.entries(product.cuotas).map(([key, value]) => (
@@ -190,6 +209,16 @@ export function ProductGrid({
             </motion.div>
           ))}
         </div>
+      )}
+
+      {/* Botón para subir arriba */}
+      {isScrolled && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-4 right-4 bg-primary text-white p-3 rounded-full shadow-lg transition-all hover:bg-accent focus:outline-none"
+        >
+          ↑
+        </button>
       )}
     </div>
   )

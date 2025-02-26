@@ -2,7 +2,6 @@ import { ProductFilters } from "@/components/product-filters"
 import { Header } from "@/components/header"
 import { ProductGrid } from "@/components/product-grid"
 import { getProducts, getCategories, getConditions } from "@/lib/data"
-import { Suspense } from "react"
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -15,6 +14,7 @@ export default async function ProductsPage({
     categories?: string | string[]
     conditions?: string | string[]
     types?: string | string[]
+    sort?: string // Nuevo parámetro para el ordenamiento
   }
 }) {
   // Convertir parámetros a formato seguro
@@ -48,6 +48,15 @@ export default async function ProductsPage({
     getConditions()
   ])
 
+  // Ordenar los productos según el parámetro `sort`
+  let sortedProducts = [...(productsData.products || [])];
+  const sortBy = searchParams.sort;
+
+  if (sortBy === "price_desc") {
+    sortedProducts.sort((a, b) => b.precio_usd - a.precio_usd); // Mayor a menor
+  } else if (sortBy === "price_asc") {
+    sortedProducts.sort((a, b) => a.precio_usd - b.precio_usd); // Menor a mayor
+  }
   return (
     <div>
       <Header />
@@ -61,8 +70,8 @@ export default async function ProductsPage({
           </div>
           <div className="md:col-span-3">
             <ProductGrid
-              key={`${search}-${categories}-${conditions}`}
-              products={productsData.products || []}
+              key={`${search}-${categories}-${conditions}-${sortBy}`} // Incluir sortBy en la key
+              products={sortedProducts} // Pasar los productos ordenados
               searchParams={searchParams}
               categories={categoriesData}
               conditions={conditionsData}
