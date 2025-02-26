@@ -2,7 +2,7 @@ import { ProductFilters } from "@/components/product-filters"
 import { Header } from "@/components/header"
 import { ProductGrid } from "@/components/product-grid"
 import { getProducts, getCategories, getConditions } from "@/lib/data"
-import type { Product } from "@/lib/types"
+import { Suspense } from "react"
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
@@ -23,22 +23,26 @@ export default async function ProductsPage({
     : searchParams.search || ""
   
   const categories = Array.isArray(searchParams.categories)
-    ? searchParams.categories
-    : searchParams.categories?.split(',') || []
-  
+    ? searchParams.categories.map(Number).filter(n => !isNaN(n))
+    : searchParams.categories?.split(',').map(Number).filter(n => !isNaN(n)) || []
+
   const conditions = Array.isArray(searchParams.conditions)
-    ? searchParams.conditions
-    : searchParams.conditions?.split(',') || []
+    ? searchParams.conditions.map(Number).filter(n => !isNaN(n))
+    : searchParams.conditions?.split(',').map(Number).filter(n => !isNaN(n)) || []
+
+  const allowedTypes = ["new", "used", "other"] as const;
+  const types = (Array.isArray(searchParams.types) 
+    ? searchParams.types
+    : searchParams.types?.split(',') || []
+  ).filter((t): t is "new" | "used" | "other" => allowedTypes.includes(t as any));
 
   // Obtener datos en paralelo
   const [productsData, categoriesData, conditionsData] = await Promise.all([
     getProducts({
       search,
-      categories: categories.map(Number).filter(n => !isNaN(n)),
-      conditions: conditions.map(Number).filter(n => !isNaN(n)),
-      types: Array.isArray(searchParams.types) // Corrección aplicada aquí
-        ? searchParams.types 
-        : searchParams.types?.split(',') || []
+      categories,
+      conditions,
+      types
     }),
     getCategories(),
     getConditions()
@@ -50,10 +54,12 @@ export default async function ProductsPage({
       <div className="container mx-auto p-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="md:col-span-1">
-            <ProductFilters
-              categories={categoriesData}
-              conditions={conditionsData}
-            />
+            <Suspense fallback={<div>Cargando filtros...</div>}>
+              <ProductFilters
+                categories={categoriesData}
+                conditions={conditionsData}
+              />
+            </Suspense>
           </div>
           <div className="md:col-span-3">
             <ProductGrid 
