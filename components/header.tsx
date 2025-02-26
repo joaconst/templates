@@ -7,7 +7,7 @@ import Link from "next/link"
 import { SearchCommand } from "@/components/search-command"
 import { ProductNav } from "@/components/product-nav"
 import { MobileNav } from "@/components/mobile-nav"
-import { useState } from "react"
+import { useState, Suspense } from "react"
 
 export function Header() {
   // Estado para controlar la visibilidad del campo de búsqueda en móviles
