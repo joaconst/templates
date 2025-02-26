@@ -66,7 +66,7 @@ export default async function ProductsPage({
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="md:col-span-1">
             {/* Envolver ProductFilters con Suspense */}
-            <Suspense fallback={<div>Loading Filters...</div>}>
+            <Suspense fallback={<div>Cargando Filtros...</div>}>
               <ProductFilters
                 categories={categoriesData}
                 conditions={conditionsData}
