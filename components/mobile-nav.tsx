@@ -7,7 +7,7 @@ import Link from "next/link"
 import { useEffect, useState, Suspense } from "react"
 import { getCategories } from "@/lib/data"
 import { Skeleton } from "@/components/ui/skeleton"
-import { usePathname } from "next/navigation"
+import { usePathname, useSearchParams } from "next/navigation"
 import { ClearFiltersButton } from "./clear-filters-button"
 
 type Category = {
@@ -25,7 +25,7 @@ function CategoryList() {
         setCategories(categoriesData)
       } catch (error) {
         console.error("Error fetching categories:", error)
-        setCategories([])
+        setCategories([]) // Manejo de error
       }
     }
 
@@ -52,30 +52,16 @@ function CategoryList() {
 
 export function MobileNav() {
   const pathname = usePathname()
+  const searchParams = useSearchParams()
   const [isOpen, setIsOpen] = useState(false)
-  const [searchParams, setSearchParams] = useState<URLSearchParams>()
 
-  // Actualizar searchParams al montar y en eventos de navegación
-  useEffect(() => {
-    const handlePopState = () => {
-      setSearchParams(new URLSearchParams(window.location.search))
-    }
+  const currentSearch = searchParams.get('search') || undefined
+  const currentCategories = searchParams.get('categories') || undefined
+  const currentConditions = searchParams.get('conditions') || undefined
 
-    // Actualizar inicialmente al montar
-    setSearchParams(new URLSearchParams(window.location.search))
-    
-    window.addEventListener('popstate', handlePopState)
-    return () => window.removeEventListener('popstate', handlePopState)
-  }, [])
-
-  // Cerrar el menú al cambiar ruta o parámetros
   useEffect(() => {
     setIsOpen(false)
   }, [pathname, searchParams])
-
-  const currentSearch = searchParams?.get('search') || undefined
-  const currentCategories = searchParams?.get('categories') || undefined
-  const currentConditions = searchParams?.get('conditions') || undefined
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
