@@ -10,7 +10,7 @@ export const revalidate = 0
 export default async function ProductsPage({
   searchParams,
 }: {
-  searchParams: { 
+  searchParams: {
     search?: string | string[]
     categories?: string | string[]
     conditions?: string | string[]
@@ -18,10 +18,10 @@ export default async function ProductsPage({
   }
 }) {
   // Convertir parámetros a formato seguro
-  const search = Array.isArray(searchParams.search) 
-    ? searchParams.search[0] 
+  const search = Array.isArray(searchParams.search)
+    ? searchParams.search[0]
     : searchParams.search || ""
-  
+
   const categories = Array.isArray(searchParams.categories)
     ? searchParams.categories.map(Number).filter(n => !isNaN(n))
     : searchParams.categories?.split(',').map(Number).filter(n => !isNaN(n)) || []
@@ -31,7 +31,7 @@ export default async function ProductsPage({
     : searchParams.conditions?.split(',').map(Number).filter(n => !isNaN(n)) || []
 
   const allowedTypes = ["new", "used", "other"] as const;
-  const types = (Array.isArray(searchParams.types) 
+  const types = (Array.isArray(searchParams.types)
     ? searchParams.types
     : searchParams.types?.split(',') || []
   ).filter((t): t is "new" | "used" | "other" => allowedTypes.includes(t as any));
@@ -54,15 +54,13 @@ export default async function ProductsPage({
       <div className="container mx-auto p-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           <div className="md:col-span-1">
-            <Suspense fallback={<div>Cargando filtros...</div>}>
-              <ProductFilters
-                categories={categoriesData}
-                conditions={conditionsData}
-              />
-            </Suspense>
+            <ProductFilters
+              categories={categoriesData}
+              conditions={conditionsData}
+            />
           </div>
           <div className="md:col-span-3">
-            <ProductGrid 
+            <ProductGrid
               key={`${search}-${categories}-${conditions}`}
               products={productsData.products || []}
               searchParams={searchParams}

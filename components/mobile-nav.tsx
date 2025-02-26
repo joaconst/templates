@@ -4,7 +4,7 @@ import { Menu } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import Link from "next/link"
-import { useEffect, useState } from "react"
+import { useEffect, useState, Suspense } from "react"
 import { getCategories } from "@/lib/data"
 import { Skeleton } from "@/components/ui/skeleton"
 import { usePathname, useSearchParams } from "next/navigation"
@@ -15,21 +15,8 @@ type Category = {
   name: string
 }
 
-export function MobileNav() {
+function CategoryList() {
   const [categories, setCategories] = useState<Category[]>([])
-  const [loading, setLoading] = useState(true)
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
-  const [isOpen, setIsOpen] = useState(false)
-
-  // Obtenemos los parámetros de búsqueda una sola vez
-  const currentSearch = searchParams.get('search') || undefined
-  const currentCategories = searchParams.get('categories') || undefined
-  const currentConditions = searchParams.get('conditions') || undefined
-
-  useEffect(() => {
-    setIsOpen(false)
-  }, [pathname, searchParams])
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -38,14 +25,43 @@ export function MobileNav() {
         setCategories(categoriesData)
       } catch (error) {
         console.error("Error fetching categories:", error)
-        setCategories([])
-      } finally {
-        setLoading(false)
+        setCategories([]) // Manejo de error
       }
     }
 
-    if (isOpen) fetchCategories()
-  }, [isOpen])
+    fetchCategories()
+  }, [])
+
+  return (
+    <div className="space-y-2">
+      {categories.map((category) => (
+        <Link
+          key={category.id}
+          href={{
+            pathname: '/products',
+            query: { categories: category.id }
+          }}
+          className="block px-4 py-2 rounded-lg hover:bg-accent transition-colors text-sm font-medium"
+        >
+          {category.name}
+        </Link>
+      ))}
+    </div>
+  )
+}
+
+export function MobileNav() {
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const [isOpen, setIsOpen] = useState(false)
+
+  const currentSearch = searchParams.get('search') || undefined
+  const currentCategories = searchParams.get('categories') || undefined
+  const currentConditions = searchParams.get('conditions') || undefined
+
+  useEffect(() => {
+    setIsOpen(false)
+  }, [pathname, searchParams])
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -65,35 +81,9 @@ export function MobileNav() {
           <h2 className="text-xl font-bold border-b pb-4">Productos</h2>
 
           <nav className="flex-1 overflow-y-auto">
-            {loading ? (
-              <div className="space-y-3">
-                {[...Array(5)].map((_, i) => (
-                  <Skeleton key={i} className="h-6 w-full" />
-                ))}
-              </div>
-            ) : (
-              <div className="space-y-2">
-                {categories.map((category) => (
-                  <Link
-                    key={category.id}
-                    href={{
-                      pathname: '/products',
-                      query: { categories: category.id }
-                    }}
-                    className="block px-4 py-2 rounded-lg hover:bg-accent transition-colors text-sm font-medium"
-                  >
-                    {category.name}
-                  </Link>
-                ))}
-
-                <Link
-                  href="/products"
-                  className="block px-4 py-2 rounded-lg bg-primary/10 text-primary font-semibold mt-4"
-                >
-                  Ver todos los productos
-                </Link>
-              </div>
-            )}
+            <Suspense fallback={<div className="space-y-3">{[...Array(5)].map((_, i) => <Skeleton key={i} className="h-6 w-full" />)}</div>}>
+              <CategoryList />
+            </Suspense>
           </nav>
 
           <div className="border-t pt-4 space-y-2">

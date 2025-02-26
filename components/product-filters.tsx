@@ -1,36 +1,44 @@
-"use client"
+"use client";
 
-import { useRouter, useSearchParams } from "next/navigation"
-import { useState } from "react"
-import { ChevronDown, ChevronUp } from "lucide-react"
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 export function ProductFilters({
   categories = [],
   conditions = [],
 }: {
-  categories?: Array<{ id: number; name: string }>
-  conditions?: Array<{ id: number; name: string }>
+  categories?: Array<{ id: number; name: string }>;
+  conditions?: Array<{ id: number; name: string }>;
 }) {
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const [isOpen, setIsOpen] = useState(false)
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
+  const [selectedConditions, setSelectedConditions] = useState<number[]>([]);
+
+  useEffect(() => {
+    // Sincronizar el estado de los filtros con los parámetros de búsqueda cuando se monta el componente.
+    const categoriesFromUrl = searchParams.get('categories')?.split(',').map(Number) || [];
+    const conditionsFromUrl = searchParams.get('conditions')?.split(',').map(Number) || [];
+
+    setSelectedCategories(categoriesFromUrl);
+    setSelectedConditions(conditionsFromUrl);
+  }, [searchParams]); // Reaccionar cuando los parámetros de búsqueda cambian
 
   const updateFilter = (type: "categories" | "conditions", value: number) => {
-    const params = new URLSearchParams(searchParams.toString())
-    const current = new Set(params.get(type)?.split(',').map(Number) || [])
-    
-    current.has(value) ? current.delete(value) : current.add(value)
-    
-    current.size > 0 
+    const params = new URLSearchParams(searchParams.toString());
+    const current = new Set(params.get(type)?.split(',').map(Number) || []);
+
+    current.has(value) ? current.delete(value) : current.add(value);
+
+    current.size > 0
       ? params.set(type, Array.from(current).join(','))
-      : params.delete(type)
+      : params.delete(type);
 
-    router.push(`/products?${params.toString()}`, { scroll: false })
-    router.refresh()
-  }
-
-  const selectedCategories = searchParams.get('categories')?.split(',').map(Number) || []
-  const selectedConditions = searchParams.get('conditions')?.split(',').map(Number) || []
+    router.push(`/products?${params.toString()}`, { scroll: false });
+    router.refresh();
+  };
 
   return (
     <div className="w-full">
@@ -46,7 +54,7 @@ export function ProductFilters({
       {/* Contenido de filtros */}
       <div className={`${isOpen ? 'block' : 'hidden'} md:block md:w-64 space-y-6`}>
         {/* Sección de Categorías */}
-        <FilterSection 
+        <FilterSection
           title="Categorías"
           items={categories}
           selectedIds={selectedCategories}
@@ -62,7 +70,7 @@ export function ProductFilters({
         />
       </div>
     </div>
-  )
+  );
 }
 
 // Componente reutilizable para secciones de filtro
@@ -70,12 +78,12 @@ const FilterSection = ({
   title,
   items,
   selectedIds,
-  onSelect
+  onSelect,
 }: {
-  title: string
-  items: Array<{ id: number; name: string }>
-  selectedIds: number[]
-  onSelect: (id: number) => void
+  title: string;
+  items: Array<{ id: number; name: string }>;
+  selectedIds: number[];
+  onSelect: (id: number) => void;
 }) => (
   <div>
     <h3 className="text-lg font-semibold mb-3 px-2">{title}</h3>
@@ -95,4 +103,4 @@ const FilterSection = ({
       ))}
     </div>
   </div>
-)
+);
