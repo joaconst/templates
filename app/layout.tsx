@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "GreenPlace - Apple Store Córdoba",
-  description: "Your premium Apple products store in Córdoba, Argentina",
+  description: "Tu tienda premium de productos Apple en Córdoba, Argentina",
 }
 
 export default function RootLayout({

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
@@ -12,7 +12,6 @@ export function ProductFilters({
   conditions?: Array<{ id: number; name: string }>;
 }) {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
   const [selectedConditions, setSelectedConditions] = useState<number[]>([]);
@@ -33,18 +32,25 @@ export function ProductFilters({
     }));
   };
 
+  // Obtener los parámetros de búsqueda desde la URL
+  const getSearchParams = () => {
+    return new URLSearchParams(window.location.search);
+  };
+
+  // Actualizar los filtros basados en la URL
   useEffect(() => {
-    const categoriesFromUrl = searchParams.get("categories")?.split(",").map(Number) || [];
-    const conditionsFromUrl = searchParams.get("conditions")?.split(",").map(Number) || [];
-    const sortFromUrl = searchParams.get("sort");
+    const params = getSearchParams();
+    const categoriesFromUrl = params.get("categories")?.split(",").map(Number) || [];
+    const conditionsFromUrl = params.get("conditions")?.split(",").map(Number) || [];
+    const sortFromUrl = params.get("sort");
 
     setSelectedCategories(categoriesFromUrl);
     setSelectedConditions(conditionsFromUrl);
     setSortBy(sortFromUrl);
-  }, [searchParams]);
+  }, []);
 
   const updateFilter = (type: "categories" | "conditions", value: number) => {
-    const params = new URLSearchParams(searchParams.toString());
+    const params = getSearchParams();
     const current = new Set(params.get(type)?.split(",").map(Number) || []);
 
     current.has(value) ? current.delete(value) : current.add(value);
@@ -59,7 +65,7 @@ export function ProductFilters({
   };
 
   const updateSort = (value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
+    const params = getSearchParams();
 
     if (value === sortBy) {
       params.delete("sort");
