@@ -50,7 +50,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="mt-8"
+            className="mt-8 flex flex-col gap-4"
           >
             <Link href="/products" passHref>
               <Button size="lg" className="animate-shimmer text-lg text-secondary">
@@ -63,11 +63,10 @@ export function Hero() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Button size="lg" className="ml-4 animate-shimmer text-lg text-secondary">
+              <Button size="lg" className="animate-shimmer text-lg text-secondary">
                 Contactanos
               </Button>
             </a>
-
           </motion.div>
         </div>
       </div>
