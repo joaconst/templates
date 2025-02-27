@@ -14,7 +14,7 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    domains: ["media.gq.com.mx", "images.unsplash.com"]
+    domains: ["images.unsplash.com"]
   },
   experimental: {
     webpackBuildWorker: true,

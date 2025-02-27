@@ -57,6 +57,17 @@ export function Hero() {
                 Compra ahora
               </Button>
             </Link>
+
+            <a
+              href={`https://wa.me/5493512362632?text=${encodeURIComponent("Hola GreenPlace, me gustaría hacer una consulta.")}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button size="lg" className="ml-4 animate-shimmer text-lg text-secondary">
+                Contactanos
+              </Button>
+            </a>
+
           </motion.div>
         </div>
       </div>
