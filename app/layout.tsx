@@ -8,7 +8,7 @@ import { CartProvider } from "@/components/cart-context"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "GreenPlace - Apple Store Córdoba",
+  title: "Tu Marca - Apple Store Córdoba",
   description: "Tu tienda premium de productos Apple en Córdoba, Argentina",
 }
 
