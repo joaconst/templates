@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { useCart } from "@/components/cart-context"
 import Image from "next/image"
 import { X } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 interface CartModalProps {
   trigger: React.ReactNode
@@ -14,10 +14,19 @@ interface CartModalProps {
 export function CartModal({ trigger }: CartModalProps) {
   const { cartItems, removeFromCart, updateQuantity, totalItems, totalPrice, clearCart } = useCart()
   const [isOpen, setIsOpen] = useState(false)
+  const [isClient, setIsClient] = useState(false) // Estado para asegurarse de que estamos en el cliente
+
+  useEffect(() => {
+    setIsClient(true) // Solo se ejecuta en el cliente
+  }, [])
 
   // Tipo de cambio ficticio USD -> ARS
   const exchangeRate = 1200
   const totalPriceARS = totalPrice * exchangeRate
+
+  if (!isClient) {
+    return null; // No renderiza nada hasta que el componente esté en el cliente
+  }
 
   return (
     <>
@@ -66,7 +75,7 @@ export function CartModal({ trigger }: CartModalProps) {
                         </p>
                         <div className="flex items-center gap-2 mt-2">
                           {/* Condicional para evitar sumar/restar en productos usados */}
-                          {product.type !== 'used' && (
+                          {product.type !== 'used' ? (
                             <>
                               <Button
                                 variant="outline"
@@ -87,9 +96,10 @@ export function CartModal({ trigger }: CartModalProps) {
                                 +
                               </Button>
                             </>
+                          ) : (
+                            // Para productos usados, solo mostramos la cantidad
+                            <span>{quantity}</span>
                           )}
-                          {/* Si es 'used', solo muestra la cantidad */}
-                          {product.type === 'used' && <span>{quantity}</span>}
                         </div>
                       </div>
                       <Button
