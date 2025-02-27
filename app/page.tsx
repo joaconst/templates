@@ -9,7 +9,7 @@ export default function Home() {
       <Header />
       <main className="flex-1">
         <Hero />
-        <Products />
+        <Products destacado />
       </main>
       <Footer />
     </div>

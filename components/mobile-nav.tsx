@@ -84,6 +84,10 @@ export function MobileNav() {
             <Suspense fallback={<div className="space-y-3">{[...Array(5)].map((_, i) => <Skeleton key={i} className="h-6 w-full" />)}</div>}>
               <CategoryList />
             </Suspense>
+
+            <Link href="/products" className="block px-4 py-2 mt-4 text-center font-medium bg-accent/50 rounded-lg hover:bg-accent/80 transition-colors">
+              Ver todos los productos
+            </Link>
           </nav>
 
           <div className="border-t pt-4 space-y-2">
@@ -92,7 +96,7 @@ export function MobileNav() {
               categories: currentCategories,
               conditions: currentConditions
             }} />
-            
+              
             <Link href="/about" className="block px-4 py-2 text-muted-foreground hover:text-foreground transition-colors text-sm">
               Sobre nosotros
             </Link>

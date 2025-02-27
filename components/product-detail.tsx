@@ -11,16 +11,16 @@ export function ProductDetails({ product }: { product: Product }) {
 
   return (
     <>
-      <Button 
-        size="sm" 
+      <Button
+        size="sm"
         variant="outline"
         onClick={() => setIsOpen(true)}
       >
-        Ver más info
+        Detalles
       </Button>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="max-h-[95dvh] overflow-y-auto sm:max-w-3xl">  
+        <DialogContent className="max-h-[95dvh] overflow-y-auto sm:max-w-3xl">
           <DialogHeader>
             <DialogTitle className="text-lg sm:text-xl">{product.modelo}</DialogTitle>
           </DialogHeader>
@@ -45,7 +45,7 @@ export function ProductDetails({ product }: { product: Product }) {
             {/* Contenedor de detalles con scroll en móvil */}
             <div className="space-y-4 overflow-y-auto max-h-[60vh] sm:max-h-none pb-4">
               <div className="flex flex-wrap gap-2">
-                <Badge variant="outline" className="text-sm">
+                <Badge variant="default" className="text-sm">
                   Categoría: {product.category_name}
                 </Badge>
                 {product.condicion_id && (
@@ -56,12 +56,12 @@ export function ProductDetails({ product }: { product: Product }) {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
-                <PriceDisplay 
-                  usd={product.precio_usd} 
-                  ars={product.precio_ars} 
+                <PriceDisplay
+                  usd={product.precio_usd}
+                  ars={product.precio_ars}
                 />
-                <Button 
-                  variant="default" 
+                <Button
+                  variant="default"
                   size="sm"
                   className="w-full sm:w-auto"
                 >
@@ -94,11 +94,11 @@ export function ProductDetails({ product }: { product: Product }) {
   );
 }
 
-// Componentes auxiliares (mantenemos los mismos con mejoras de estilo)
+// Componentes auxiliares
 const PriceDisplay = ({ usd, ars }: { usd: number; ars?: number }) => (
-  <div className="bg-muted p-4 rounded-lg flex-grow">
-    <div className="flex items-baseline gap-2">
-      <span className="text-2xl font-bold">USD ${usd.toLocaleString('es-AR')}</span>
+  <div className="bg-muted p-4 rounded-lg w-full">
+    <div className="flex items-baseline gap-2 flex-wrap">
+      <span className="text-2xl text-black font-bold">USD ${usd.toLocaleString('es-AR')}</span>
       {ars && (
         <span className="text-sm text-muted-foreground">
           (ARS ${ars.toLocaleString('es-AR')})
@@ -117,17 +117,19 @@ const DetailItem = ({ label, value }: { label: string; value: string }) => (
 
 const Installments = ({ cuotas }: { cuotas?: Product['cuotas'] }) => {
   if (!cuotas) return null;
-    
+
   return (
     <div className="bg-muted p-4 rounded-lg">
-      <h3 className="text-md font-medium mb-2">Plan en cuotas</h3>
+      <h3 className="text-md font-medium mb-2 text-black">
+        Plan en cuotas
+      </h3>
       <div className="grid grid-cols-2 gap-2">
         {Object.entries(cuotas).map(([key, value]) => (
           <div key={key} className="text-sm">
-            <span className="text-muted-foreground">
+            <span className="text-gray-600 dark:text-gray-400">
               {key.replace('cuotas_', '')}x:
             </span>
-            <span className="ml-2 font-medium">
+            <span className="ml-2 font-medium text-muted-foreground">
               ${value.toLocaleString('es-AR')}
             </span>
           </div>

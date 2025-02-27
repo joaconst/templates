@@ -48,16 +48,23 @@ export function ProductFilters({
 
   const updateFilter = (type: "categories" | "conditions", value: number) => {
     const params = new URLSearchParams(searchParams.toString());
-    const current = new Set(params.get(type)?.split(",").map(Number) || []);
-
-    current.has(value) ? current.delete(value) : current.add(value);
-
-    if (current.size > 0) {
+    
+    if (type === "conditions") {
+      // Para condición: reemplazar cualquier selección previa
+      const current = new Set([value]);
       params.set(type, Array.from(current).join(","));
     } else {
-      params.delete(type);
+      // Para categorías: mantener lógica de toggle
+      const current = new Set(params.get(type)?.split(",").map(Number) || []);
+      current.has(value) ? current.delete(value) : current.add(value);
+      
+      if (current.size > 0) {
+        params.set(type, Array.from(current).join(","));
+      } else {
+        params.delete(type);
+      }
     }
-
+  
     updateUrl(params);
   };
 

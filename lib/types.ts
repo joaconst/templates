@@ -19,6 +19,7 @@ export type Product = {
   }
   info?: string
   imagen_url?: string   // Opción desde URL externa
+  destacado?: boolean
 }
 
 export type ProductFilterParams = {
@@ -26,5 +27,5 @@ export type ProductFilterParams = {
   conditions?: number[]      // 1 (nuevo) o 2 (usado)
   types?: ('new' | 'used' | 'other')[]
   search?: string
+  destacado?: boolean
 }
-

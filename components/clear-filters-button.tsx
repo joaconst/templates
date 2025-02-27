@@ -11,16 +11,23 @@ export function ClearFiltersButton({
     search?: string | string[]
     categories?: string | string[]
     conditions?: string | string[]
+    sort?: string | string[]
   }
 }) {
   const router = useRouter()
-  const hasFilters = !!searchParams.search || !!searchParams.categories || !!searchParams.conditions
+  
+  // Calcular cantidad de filtros activos
+  const totalFilters = 
+    (searchParams.search ? 1 : 0) +
+    (searchParams.categories?.length ? 1 : 0) +
+    (searchParams.conditions?.length ? 1 : 0) +
+    (searchParams.sort ? 1 : 0)
 
   const clearFilters = () => {
     router.push('/products', { scroll: false })
   }
 
-  if (!hasFilters) return null
+  if (totalFilters < 2) return null // Solo mostrar si hay 2+ filtros
 
   return (
     <Button

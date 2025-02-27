@@ -35,7 +35,7 @@ const components: { title: string; href: string; description: string }[] = [
   },
   {
     title: "AirPods",
-    href: "/products?categories=5",
+    href: "/products?categories=",
     description: "Audio inalámbrico con una calidad de sonido increíble.",
   },
 ]

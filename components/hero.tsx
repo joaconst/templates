@@ -5,20 +5,35 @@ import { motion } from "framer-motion"
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden py-20 md:py-32">
+    <section className="relative overflow-hidden py-12 md:py-24 h-screen min-h-[600px]">
+      {/* Video de fondo */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.5 }}
+        initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5 }}
-        className="absolute inset-0 bg-[url('/iphone-16.jpg')] bg-cover bg-center bg-no-repeat opacity-10"
-      />
-      <div className="container relative z-10">
-        <div className="max-w-2xl">
+        transition={{ duration: 0.8 }}
+        className="absolute inset-0 z-0"
+      >
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          className="w-full h-full object-cover object-center"
+        >
+          <source src="/iphone-16.mov" type="video/mp4" />
+          <source src="/iphone-16.webm" type="video/webm" />
+          Tu navegador no soporta la reproducción de videos.
+        </video>
+      </motion.div>
+
+      {/* Contenido */}
+      <div className="container relative z-10 h-full flex items-center">
+        <div className="max-w-xl backdrop-blur-[2px] bg-white/5 p-6 rounded-lg">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl"
+            className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl drop-shadow-md text-secondary"
           >
             GreenPlace
           </motion.h2>
@@ -26,10 +41,9 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="mt-4 text-muted-foreground"
+            className="mt-4 text-muted-foreground text-lg md:text-xl"
           >
-            Experimente la última tecnología de Apple con orientación experta y un servicio premium. Visítanos en Córdoba y 
-            descubre por qué GreenPlace es tu mejor opción en productos Apple.
+            Experimente la última tecnología de Apple con orientación experta y un servicio premium.
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -37,7 +51,7 @@ export function Hero() {
             transition={{ delay: 0.4 }}
             className="mt-8"
           >
-            <Button size="lg" className="animate-shimmer">
+            <Button size="lg" className="animate-shimmer text-lg text-secondary">
               Compra ahora
             </Button>
           </motion.div>
@@ -46,4 +60,3 @@ export function Hero() {
     </section>
   )
 }
-
