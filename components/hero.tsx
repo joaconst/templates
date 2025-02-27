@@ -36,7 +36,7 @@ export function Hero() {
             transition={{ delay: 0.2 }}
             className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl drop-shadow-md text-secondary"
           >
-            GreenPlace
+            Tu marca
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -59,7 +59,7 @@ export function Hero() {
             </Link>
 
             <a
-              href={`https://wa.me/5493512362632?text=${encodeURIComponent("Hola GreenPlace, me gustaría hacer una consulta.")}`}
+              href={`https://wa.me/5493512362632?text=${encodeURIComponent("Hola Tu marca, me gustaría hacer una consulta.")}`}
               target="_blank"
               rel="noopener noreferrer"
             >
