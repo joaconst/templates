@@ -1,12 +1,19 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Product } from "@/lib/types";
 import { useState } from "react";
 import Image from "next/image";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { useCart } from "@/components/cart-context"
 
 export function ProductDetails({ product }: { product: Product }) {
-  const [isOpen, setIsOpen] = useState(false);
+  const { addToCart } = useCart()
+  const [isOpen, setIsOpen] = useState(false)
+
+  const handleAddToCart = () => {
+    addToCart(product)
+    setIsOpen(false)
+  }
 
   return (
     <>
@@ -64,6 +71,7 @@ export function ProductDetails({ product }: { product: Product }) {
                   variant="default"
                   size="sm"
                   className="w-full sm:w-auto"
+                  onClick={handleAddToCart}
                 >
                   Añadir al carrito
                 </Button>

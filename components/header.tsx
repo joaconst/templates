@@ -1,13 +1,15 @@
 "use client"
 
 import { ShoppingCart, Search as SearchIcon } from "lucide-react"
+import Link from "next/link"
+import { useState, Suspense } from "react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
-import Link from "next/link"
 import { SearchCommand } from "@/components/search-command"
 import { ProductNav } from "@/components/product-nav"
 import { MobileNav } from "@/components/mobile-nav"
-import { useState, Suspense } from "react"
+import { CartModal } from "@/components/cart-modal"
+import { useCart } from "@/components/cart-context"
 
 export function Header() {
   // Estado para controlar la visibilidad del campo de búsqueda en móviles
@@ -15,6 +17,8 @@ export function Header() {
 
   // Función para alternar la visibilidad de la barra de búsqueda
   const toggleSearchVisibility = () => setIsSearchVisible(!isSearchVisible)
+
+  const { totalItems } = useCart()
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -54,10 +58,16 @@ export function Header() {
           )}
 
           <ThemeToggle />
-          <Button variant="ghost" size="icon" className="relative">
-            <ShoppingCart className="h-5 w-5" />
-            <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-primary text-xs font-bold">0</span>
-          </Button>
+          <CartModal
+            trigger={
+              <Button variant="ghost" size="icon" className="relative">
+                <ShoppingCart className="h-5 w-5" />
+                <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-primary text-xs font-bold">
+                  {totalItems}
+                </span>
+              </Button>
+            }
+          />
         </div>
       </div>
     </header>

@@ -3,6 +3,8 @@
 import * as React from "react"
 import { useRouter } from "next/navigation"
 import { Search } from "lucide-react"
+import { getCategories, searchProducts } from "@/lib/data"
+import { Product } from "@/lib/types"
 import {
   CommandDialog,
   CommandEmpty,
@@ -11,14 +13,12 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command"
-import { getCategories, searchProducts } from "@/lib/data"
-import { Product } from "@/lib/types"
 
 export function SearchCommand() {
   const router = useRouter()
   const [open, setOpen] = React.useState(false)
   const [searchQuery, setSearchQuery] = React.useState("")
-  const [categories, setCategories] = React.useState<Array<{id: number, name: string}>>([])
+  const [categories, setCategories] = React.useState<Array<{ id: number, name: string }>>([])
   const [filteredProducts, setFilteredProducts] = React.useState<Product[]>([])
   const [loading, setLoading] = React.useState(false)
 
@@ -70,7 +70,7 @@ export function SearchCommand() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="w-full max-w-sm flex items-center gap-2 px-3 py-1.5 text-sm text-muted-foreground rounded-md border bg-background shadow-sm transition-colors dark:hover:bg-accent hover:bg-accent/50 hover:text-accent-foreground"
+        className="w-full max-w-sm md:w-full md:max-w-sm flex items-center gap-2 px-3 py-1.5 text-sm text-muted-foreground rounded-md border bg-background shadow-sm transition-colors dark:hover:bg-accent hover:bg-accent/50 hover:text-accent-foreground mx-auto"
       >
         <Search className="h-4 w-4" />
         <span className="flex-1 text-left">Buscar productos...</span>
@@ -79,10 +79,10 @@ export function SearchCommand() {
         </kbd>
       </button>
       <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput 
-          placeholder="Search products..." 
-          value={searchQuery} 
-          onValueChange={setSearchQuery} 
+        <CommandInput
+          placeholder="Buscar productos..."
+          value={searchQuery}
+          onValueChange={setSearchQuery}
         />
         <CommandList>
           {loading && <CommandEmpty>Searching...</CommandEmpty>}
@@ -91,7 +91,7 @@ export function SearchCommand() {
           )}
 
           {filteredProducts.length > 0 && (
-            <CommandGroup heading="Products">
+            <CommandGroup heading="Productos">
               {filteredProducts.map((product) => (
                 <CommandItem
                   key={product.id}
@@ -117,11 +117,11 @@ export function SearchCommand() {
           )}
 
           {!searchQuery && (
-            <CommandGroup heading="Categories">
+            <CommandGroup heading="Categorias">
               {categories.map((category) => (
-                <CommandItem 
-                  key={category.id} 
-                  value={`category:${category.id}`} 
+                <CommandItem
+                  key={category.id}
+                  value={`category:${category.id}`}
                   onSelect={handleSelect}
                 >
                   {category.name}
@@ -133,4 +133,4 @@ export function SearchCommand() {
       </CommandDialog>
     </>
   )
-}
+}  
