@@ -22,7 +22,6 @@ export function SearchCommand() {
   const [filteredProducts, setFilteredProducts] = React.useState<Product[]>([])
   const [loading, setLoading] = React.useState(false)
 
-  // Cargar categorías al montar el componente
   React.useEffect(() => {
     const loadCategories = async () => {
       const cats = await getCategories()
@@ -31,17 +30,12 @@ export function SearchCommand() {
     loadCategories()
   }, [])
 
-  // Buscar productos cuando cambia el query
   React.useEffect(() => {
     const search = async () => {
-      if (searchQuery.length > 2) {
-        setLoading(true)
-        const results = await searchProducts(searchQuery)
-        setFilteredProducts(results)
-        setLoading(false)
-      } else {
-        setFilteredProducts([])
-      }
+      setLoading(true)
+      const results = await searchProducts(searchQuery)
+      setFilteredProducts(results)
+      setLoading(false)
     }
 
     const debounce = setTimeout(() => {
@@ -51,7 +45,6 @@ export function SearchCommand() {
     return () => clearTimeout(debounce)
   }, [searchQuery])
 
-  // Atajo de teclado
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
@@ -93,7 +86,7 @@ export function SearchCommand() {
         />
         <CommandList>
           {loading && <CommandEmpty>Searching...</CommandEmpty>}
-          {!loading && filteredProducts.length === 0 && searchQuery.length > 2 && (
+          {!loading && filteredProducts.length === 0 && searchQuery.length > 0 && (
             <CommandEmpty>No results found.</CommandEmpty>
           )}
 
@@ -123,17 +116,19 @@ export function SearchCommand() {
             </CommandGroup>
           )}
 
-          <CommandGroup heading="Categories">
-            {categories.map((category) => (
-              <CommandItem 
-                key={category.id} 
-                value={`category:${category.id}`} 
-                onSelect={handleSelect}
-              >
-                {category.name} {/* Mostrar el nombre de la categoría */}
-              </CommandItem>
-            ))}
-          </CommandGroup>
+          {!searchQuery && (
+            <CommandGroup heading="Categories">
+              {categories.map((category) => (
+                <CommandItem 
+                  key={category.id} 
+                  value={`category:${category.id}`} 
+                  onSelect={handleSelect}
+                >
+                  {category.name}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          )}
         </CommandList>
       </CommandDialog>
     </>

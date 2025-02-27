@@ -1,4 +1,3 @@
-// @/components/ui/badge.tsx
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ComponentProps, forwardRef } from "react";
@@ -15,7 +14,7 @@ export const Badge = forwardRef<HTMLDivElement, ComponentProps<"div"> & {
         {
           "bg-primary text-primary-foreground hover:bg-primary/90": variant === "default",
           "bg-secondary text-secondary-foreground hover:bg-secondary/80": variant === "secondary",
-          "bg-accent text-accent-foreground hover:bg-accent/80 pl-3 pr-2 gap-1 cursor-pointer":
+          "dark:bg-accent bg-accent/50 dark:text-black text-secondary hover:bg-accent/80 pl-3 pr-2 gap-1 cursor-pointer":
             variant === "dismissable",
         },
         className

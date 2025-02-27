@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { motion } from "framer-motion"
+import Link from "next/link"
 
 export function Hero() {
   return (
@@ -28,7 +29,7 @@ export function Hero() {
 
       {/* Contenido */}
       <div className="container relative z-10 h-full flex items-center">
-        <div className="max-w-xl backdrop-blur-[2px] bg-white/5 p-6 rounded-lg">
+        <div className="max-w-xl backdrop-blur-[2px] bg-white/10 p-6 rounded-lg">
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -41,7 +42,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="mt-4 text-muted-foreground text-lg md:text-xl"
+            className="mt-4 text-muted text-lg md:text-xl"
           >
             Experimente la última tecnología de Apple con orientación experta y un servicio premium.
           </motion.p>
@@ -51,9 +52,11 @@ export function Hero() {
             transition={{ delay: 0.4 }}
             className="mt-8"
           >
-            <Button size="lg" className="animate-shimmer text-lg text-secondary">
-              Compra ahora
-            </Button>
+            <Link href="/products" passHref>
+              <Button size="lg" className="animate-shimmer text-lg text-secondary">
+                Compra ahora
+              </Button>
+            </Link>
           </motion.div>
         </div>
       </div>
