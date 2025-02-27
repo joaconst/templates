@@ -3,7 +3,8 @@ import { Product, ProductFilterParams } from './types';
 
 const mapProduct = {
   new: (item: any) => ({
-    id: item.id,
+    global_id: item.global_id,
+    id: item.global_id,
     type: 'new' as const,
     categoria_id: item.categoria_id,
     category_name: item.categorias?.name || 'iPhone',
@@ -16,9 +17,10 @@ const mapProduct = {
     imagen_url: item.imagen_url,
     destacado: item.destacado || false
   }),
-  
+
   used: (item: any) => ({
-    id: item.id,
+    global_id: item.global_id,
+    id: item.global_id,
     type: 'used' as const,
     categoria_id: item.categoria_id,
     category_name: item.categorias?.name || 'iPhone',
@@ -39,9 +41,10 @@ const mapProduct = {
     imagen_url: item.imagen_url,
     destacado: item.destacado || false
   }),
-  
+
   other: (item: any) => ({
-    id: item.id,
+    global_id: item.global_id,
+    id: item.global_id,
     type: 'other' as const,
     categoria_id: item.categoria_id,
     category_name: item.categorias?.name || 'Otros',
@@ -54,6 +57,7 @@ const mapProduct = {
     destacado: item.destacado || false
   })
 };
+
 
 export async function getProducts(filters?: ProductFilterParams) {
   try {

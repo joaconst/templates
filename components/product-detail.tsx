@@ -1,8 +1,7 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Product } from "@/lib/types";
-import { motion } from "framer-motion";
 import { useState } from "react";
 import Image from "next/image";
 
@@ -23,6 +22,7 @@ export function ProductDetails({ product }: { product: Product }) {
         <DialogContent className="max-h-[95dvh] overflow-y-auto sm:max-w-3xl">
           <DialogHeader>
             <DialogTitle className="text-lg sm:text-xl">{product.modelo}</DialogTitle>
+            <DialogDescription />
           </DialogHeader>
 
           <div className="grid gap-4 sm:grid-cols-2">
