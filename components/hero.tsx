@@ -54,7 +54,7 @@ export function Hero() {
           >
             <Link href="/products" passHref>
               <Button size="lg" className="animate-shimmer text-lg text-secondary">
-                Compra ahora
+                Ver productos
               </Button>
             </Link>
 
